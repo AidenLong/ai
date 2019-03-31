@@ -7,22 +7,28 @@
 # print(sum)
 
 # 99乘法表
-for i in range(1, 10):
-    for j in range(1, i + 1):
-        print(j, '*' , i, "=", i*j, end='\t')
-    print()
+# for i in range(1, 10):
+#     for j in range(1, i + 1):
+#         print(j, '*' , i, "=", i*j, end='\t')
+#     print()
 
 # 从键盘输入一个字符串，将小写字母全部转换成大写字母,将字符串以列表的形式输出(如果字符串包含整数取整型)?
 # str = input("输入一个字符串:")
-# str = str.upper()
+# list1 = []
 # for i in str:
-#     print(i)
+#     if i.isdigit():
+#         list1.append(int(i))
+#     else:
+#         list1.append(i.upper())
+# print(list1)
 
 # 随机输入8位以内的的正整数，要求：一、求它是几位数，二、逆序打印出各位数字。
-# num = input("输入一个正整数:")
-# print(len(num))
-# for i in num[::-1]:
-#     print(i)
+num = input("输入一个正整数:")
+length = len(num)
+if length <= 8:
+    print(length)
+    for i in num[::-1]:
+        print(i, end=" ")
 
 
 # 一球从n米(自己输入)高度自由落下，每次落地后反跳回原高度的一半；再落下，求它在第10次落地时，共经过多少米？第10次反弹多高？
