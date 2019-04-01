@@ -23,20 +23,22 @@
 # print(list1)
 
 # 随机输入8位以内的的正整数，要求：一、求它是几位数，二、逆序打印出各位数字。
-num = input("输入一个正整数:")
-length = len(num)
-if length <= 8:
-    print(length)
-    for i in num[::-1]:
-        print(i, end=" ")
+# num = input("输入一个正整数:")
+# length = len(num)
+# if length <= 8:
+#     print(length)
+#     print(num[::-1])
 
 
 # 一球从n米(自己输入)高度自由落下，每次落地后反跳回原高度的一半；再落下，求它在第10次落地时，共经过多少米？第10次反弹多高？
 # heigh = int(input("输入一个正整数:"))
-# i = 0
+# i = 1
 # sum = 0
 # while i <= 10 :
-#     sum += heigh
+#     if i == 1:
+#         sum += heigh
+#     else:
+#         sum += heigh * 2
 #     heigh /= 2
 #     i += 1
 #
@@ -54,7 +56,7 @@ if length <= 8:
 #         num += 1
 #     elif i.isalpha():
 #         a += 1
-#     elif i == " ":
+#     elif i.isspace():
 #         space += 1
 #     else:
 #         other += 1
