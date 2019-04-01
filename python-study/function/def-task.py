@@ -83,37 +83,37 @@
     k  = (k+(m-1))%len(list)   索引
 '''
 
-# def func(n,m):
-#     #生成一个列表
-#     people = list(range(1,n+1))
-#     k = 0 #定义开始索引
-#
-#     #开始循环报数
-#     while len(people) > 2:
-#         k = (k+(m-1))%len(people)
-#         print('kill:',people[k])
-#         del(people[k])
-#         print(k)
-#     return people
-#
-# print(func(41,3))
+def func(n,m):
+    #生成一个列表
+    people = list(range(1,n+1))
+    k = 0 #定义开始索引
+
+    #开始循环报数
+    while len(people) > 2:
+        k = (k+(m-1))%len(people)
+        print('kill:',people[k])
+        del(people[k])
+        print(k)
+    return people
+
+print(func(41,3))
 
 '''
 定义一个函数，实现两个数四则运算，要注意有3个参数，分别是运算符和两个用于运算的数字。
 '''
-def calculation(a1, a2, b):
-    if b == '+':
-        return a1 + a2
-    elif b == '-':
-        return a1 - a2
-    elif b == '*':
-        return a1 * a2
-    elif b == '/':
-        return a1 / a2
-    else:
-        return '元算符错误'
-
-print(calculation(1, 2, '+'))
-print(calculation(1, 2, '*'))
-print(calculation(1, 2, '-'))
-print(calculation(1, 2, '!'))
+# def calculation(a1, a2, b):
+#     if b == '+':
+#         return a1 + a2
+#     elif b == '-':
+#         return a1 - a2
+#     elif b == '*':
+#         return a1 * a2
+#     elif b == '/':
+#         return a1 / a2
+#     else:
+#         return '元算符错误'
+#
+# print(calculation(1, 2, '+'))
+# print(calculation(1, 2, '*'))
+# print(calculation(1, 2, '-'))
+# print(calculation(1, 2, '!'))
