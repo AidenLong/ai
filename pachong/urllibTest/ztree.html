@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="description" content="zTree 是一个依靠 jQuery 实现的多功能 “树插件”。优异的性能、灵活的配置、多种功能的组合是 zTree 最大优点。专门适合项目开发，尤其是 树状菜单、树状数据的Web显示、权限管理等等。zTree 是开源免费的软件（MIT 许可证）。在开源的作用下，zTree 越来越完善，目前已经拥有了不少粉丝，并且今后还会推出更多的 zTree 扩展功能库，让 zTree 更加强大。" />
+		<meta name="keywords" content="jQuery, javascript, Tree, plugIn, 树, 插件, 树插件, Web, Web前端" />
+		<title>Demo [zTree -- jQuery tree plug-ins.]</title>
+		<link rel="stylesheet" href="css/common.css?2018041601" type="text/css">
+		<link rel="shortcut icon" href="favicon.ico">
+<link rel='stylesheet' href='css/zTreeStyle/zTreeStyleForDemo.css?2018041601' type='text/css'>		
+		<script type="text/javascript" src="js/babyFirst.js?2018041601"></script>
+		<script type="text/javascript">
+		var lang = "en";
+		</script>
+	</head>
+	<body><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-7819603-6']);
+  _gaq.push(['_setDomainName', 'treejs.cn']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_setLocalRemoteServerMode']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?4e76315db54e0f4bb008d5f809f16f26";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<div id="header_wrap" class="header_wrap">
+	<div id="header" class="header round">
+		<!--<div class="light-bulb" alt=""></div>-->
+		<a href="https://note.wiz.cn/pages/manage/biz/payRead.html?kb=3fe9d146-6498-4882-b75c-f533442aba5b" target="_blank"><div class="qq-group" title="Step by step teach you to learn zTree"></div></a>
+		<div class="ieSuggest">If you use the Chrome / FireFox / Opera / IE9 browser will be even more dazzling effect!</div>
+		<div class="header-text">
+			<h1><em>zTree v3.5 Demo</em></h1>
+			<p>To make it easier for friends to learn zTree, Demo has been revised.</p>
+		</div>
+		<ul class="shortcuts">
+			<li><a href="main.php"  target="_self"><button class="ico home" onfocus="this.blur();"></button><span class="">Home</span></a></li>
+			<li><a href="demo.php" onclick='return false;' target="_zTreeDemo"><button class="ico demo" onfocus="this.blur();"></button><span class="selected">Demo</span></a></li>
+			<li><a href="api.php"  target="_zTreeApi"><button class="ico api" onfocus="this.blur();"></button><span class="">API Document</span></a></li>
+			<li><a href="faq.php#_206"  target="_self"><button class="ico faq" onfocus="this.blur();"></button><span class="">Guide</span></a></li>
+			<li><a href="donate.php"  target="_self"><button class="ico donate" onfocus="this.blur();"></button><span class="">Donate</span></a></li>
+			<li><a href="https://gitee.com/zTree/zTree_v3"  target="_blank">
+                <span class="">Download</span>
+                </a>
+			<a href="https://gitee.com/zTree/zTree_v3"  target="_blank" style="margin-right: 5px;position: relative;top: 5px;">
+			<svg width="28px" height="24px" viewBox="0 0 38 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+			    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g><g>
+			        <polygon id="XMLID_215_" fill="#C71D24" points="27.1407407 15.9833333 27.1407407 19.7166667 27.1407407 23.5666667 23.3481481 23.5666667 19.437037 23.5666667 15.6444444 23.5666667 11.7333333 23.5666667 7.82222222 23.5666667 4.02962963 23.5666667 4.02962963 19.7166667 4.02962963 15.9833333 4.02962963 12.1333333 4.02962963 8.28333333 4.02962963 4.55 7.82222222 4.55 11.7333333 4.55 15.6444444 4.55 19.437037 4.55 19.437037 8.28333333 19.437037 12.1333333 19.437037 15.9833333 15.6444444 15.9833333 11.7333333 15.9833333 11.7333333 12.1333333 15.6444444 12.1333333 15.6444444 8.28333333 11.7333333 8.28333333 7.82222222 8.28333333 7.82222222 12.1333333 7.82222222 15.9833333 7.82222222 19.7166667 11.7333333 19.7166667 15.6444444 19.7166667 19.437037 19.7166667 23.3481481 19.7166667 23.3481481 15.9833333 23.3481481 12.1333333 23.3481481 8.28333333 23.3481481 4.55 23.3481481 0.7 19.437037 0.7 15.6444444 0.7 11.7333333 0.7 7.82222222 0.7 4.02962963 0.7 0.118518519 0.7 0.118518519 4.55 0.118518519 8.28333333 0.118518519 12.1333333 0.118518519 15.9833333 0.118518519 19.7166667 0.118518519 23.5666667 0.118518519 27.4166667 4.02962963 27.4166667 7.82222222 27.4166667 11.7333333 27.4166667 15.6444444 27.4166667 19.437037 27.4166667 23.3481481 27.4166667 27.1407407 27.4166667 31.0518519 27.4166667 31.0518519 23.5666667 31.0518519 19.7166667 31.0518519 15.9833333"></polygon>
+			        <rect id="XMLID_212_" fill="#C71D24" opacity="0.600000024" x="27.1407407" y="0.7" width="3.91111111" height="3.85"></rect>
+                    <rect id="XMLID_209_" fill="#C71D24" opacity="0.800000012" x="27.1407407" y="8.86666667" width="3.91111111" height="3.85"></rect>
+                </g></g></g>
+            </svg>
+            </a>
+			<a href="https://github.com/zTree/zTree_v3"  target="_blank" style="position: relative;top: 5px;">
+            <svg aria-hidden="true" height="24" version="1.1" viewBox="0 0 18 18" width="24">
+                <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+            </a>
+			</li>
+		</ul>
+		<ul class="shortcuts language">
+			<li><a href="#"  onclick="chgLang('cn'); return false;"><button class="ico cn" onfocus="this.blur();" title="Chinese"></button><span class=""></span></a></li>
+		</ul>
+	</div>
+	<div class="header-ad-container round">
+        <div class="header-ad"><a href="https://enhancer.io?lang=en" target="_blank"><img src="./img/ad/enhancer-ads-en.png?20190326" /></a></div>
+        <span class="ad-alert"></span>
+    </div>
+</div>
+<div id="ad_120_600_left" class="ad ad_120_600" style="top:0px; display:none;">
+	<div id="ad_120_600_wiz" class="adLeft ad" style="top:0px; left:120px;">
+	    <a href="http://www.wiz.cn/i/ef16c35f" target="_blank"><div class="ad_wiz" ></div></a>
+	    <span class="ad-alert"></span>
+	</div>
+</div>
+<div id="ad_120_600_right" class="ad ad_120_600" style="position:absolute; top:0px; display:none;">
+	<div id="ad_120_600_wiz" class="adRight ad adEmpty" style="top:0px; left:120px;">
+	    <!-- <a href="http://www.wiz.cn/i/ef16c35f" target="_blank"><div class="ad_wiz" ></div></a> -->
+	    <span class="ad-alert"></span>
+		</div>
+</div><div id="content_wrap" class="content_wrap">
+	<div id="content" class="content">
+		<div class="nav_section">
+			<ul>
+			</ul>
+		</div>
+
+		<div id="contentBox" class="contentBox round clearfix">
+			<div id="demoContent" class="demoContent">
+				<div id="demo_menu" class="demo_menu left ">
+					<ul id="menuTree" class="ztree"></ul>
+				</div>
+				<div id="demo_viewer" class="demo_viewer right">
+					<IFRAME ID="demoIframe" Name="demoIframe" FRAMEBORDER=0 SCROLLING=NO SRC="" style="display:none;"></IFRAME>
+				</div>
+			</div>
+
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<script type="text/javascript">
+var menu_nodes =[
+	{id:1, pId:0, name:"[core] Basic Functions", open:false},
+	{id:101, pId:1, name:"Standard JSON Data", iconSkin:"menu", file:"core/standardData"},
+	{id:102, pId:1, name:"Simple JSON Data", iconSkin:"menu", file:"core/simpleData"},
+	{id:103, pId:1, name:"Don't Show Line", iconSkin:"menu", file:"core/noline"},
+	{id:104, pId:1, name:"Don't Show Icon", iconSkin:"menu", file:"core/noicon"},
+	{id:105, pId:1, name:"Custom Icon - icon", iconSkin:"menu", file:"core/custom_icon"},
+	{id:106, pId:1, name:"Custom Icon - iconSkin", iconSkin:"menu", file:"core/custom_iconSkin"},
+	{id:107, pId:1, name:"Custom Fonts", iconSkin:"menu", file:"core/custom_font"},
+	{id:115, pId:1, name:"Hyperlinks Demo", iconSkin:"menu", file:"core/url"},
+	{id:108, pId:1, name:"Dynamic Tree with Ajax", iconSkin:"menu", file:"core/async"},
+	{id:109, pId:1, name:"Dynamic Tree - zTree methods", iconSkin:"menu", file:"core/async_fun"},
+	{id:110, pId:1, name:"Update Node - zTree methods", iconSkin:"menu", file:"core/update_fun"},
+	{id:111, pId:1, name:"Control of Click Node", iconSkin:"menu", file:"core/click"},
+	{id:112, pId:1, name:"Control of Expand Node", iconSkin:"menu", file:"core/expand"},
+	{id:113, pId:1, name:"Search Nodes", iconSkin:"menu", file:"core/searchNodes"},
+	{id:114, pId:1, name:"Other Mouse Events for zTree", iconSkin:"menu", file:"core/otherMouse"},
+
+	{id:2, pId:0, name:"[excheck] Checkbox & Radio", open:false},
+	{id:201, pId:2, name:"Checkbox Operation", iconSkin:"menu", file:"excheck/checkbox"},
+	{id:206, pId:2, name:"Checkbox nocheck Demo", iconSkin:"menu", file:"excheck/checkbox_nocheck"},
+	{id:207, pId:2, name:"Checkbox chkDisabled Demo", iconSkin:"menu", file:"excheck/checkbox_chkDisabled"},
+	{id:208, pId:2, name:"Checkbox halfCheck Demo", iconSkin:"menu", file:"excheck/checkbox_halfCheck"},
+	{id:202, pId:2, name:"Statistics Checkbox is Checked", iconSkin:"menu", file:"excheck/checkbox_count"},
+	{id:203, pId:2, name:"Checkbox - zTree methods", iconSkin:"menu", file:"excheck/checkbox_fun"},
+	{id:204, pId:2, name:"Radio Operation", iconSkin:"menu", file:"excheck/radio"},
+	{id:209, pId:2, name:"Radio nocheck Demo", iconSkin:"menu", file:"excheck/radio_nocheck"},
+	{id:210, pId:2, name:"Radio chkDisabled Demo", iconSkin:"menu", file:"excheck/radio_chkDisabled"},
+	{id:211, pId:2, name:"Radio halfCheck Demo", iconSkin:"menu", file:"excheck/radio_halfCheck"},
+	{id:205, pId:2, name:"Radio - zTree methods", iconSkin:"menu", file:"excheck/radio_fun"},
+	{id:212, pId:2, name:"", blank:true},
+	{id:213, pId:2, name:"", blank:true},
+	{id:214, pId:2, name:"", blank:true},
+	{id:215, pId:2, name:"", blank:true},
+
+	{id:3, pId:0, name:"[exedit] Editing", open:false},
+	{id:301, pId:3, name:"Normal Drag Node Operation", iconSkin:"menu", file:"exedit/drag"},
+	{id:302, pId:3, name:"Advanced Drag Node Operation", iconSkin:"menu", file:"exedit/drag_super"},
+	{id:303, pId:3, name:"Move / Copy - zTree methods", iconSkin:"menu", file:"exedit/drag_fun"},
+	{id:304, pId:3, name:"Basic Edit Nodes", iconSkin:"menu", file:"exedit/edit"},
+	{id:305, pId:3, name:"Advanced Edit Nodes", iconSkin:"menu", file:"exedit/edit_super"},
+	{id:306, pId:3, name:"Edit Nodes - zTree methods", iconSkin:"menu", file:"exedit/edit_fun"},
+	{id:307, pId:3, name:"Editing Dynamic Tree", iconSkin:"menu", file:"exedit/async_edit"},
+	{id:308, pId:3, name:"Multiple Trees", iconSkin:"menu", file:"exedit/multiTree"},
+	{id:309, pId:3, name:"", blank:true},
+	{id:310, pId:3, name:"", blank:true},
+	{id:311, pId:3, name:"", blank:true},
+	{id:312, pId:3, name:"", blank:true},
+	{id:313, pId:3, name:"", blank:true},
+	{id:314, pId:3, name:"", blank:true},
+	{id:315, pId:3, name:"", blank:true},
+
+	{id:4, pId:0, name:"Large Amount of Data Loading", open:false},
+	{id:401, pId:4, name:"One-time Large Data Loading", iconSkin:"menu", file:"bigdata/common"},
+	{id:402, pId:4, name:"Loading Data in Batches", iconSkin:"menu", file:"bigdata/diy_async"},
+	{id:403, pId:4, name:"Loading Data By Pagination", iconSkin:"menu", file:"bigdata/page"},
+	{id:404, pId:4, name:"", blank:true},
+	{id:405, pId:4, name:"", blank:true},
+	{id:406, pId:4, name:"", blank:true},
+	{id:407, pId:4, name:"", blank:true},
+	{id:408, pId:4, name:"", blank:true},
+	{id:409, pId:4, name:"", blank:true},
+	{id:410, pId:4, name:"", blank:true},
+	{id:411, pId:4, name:"", blank:true},
+	{id:412, pId:4, name:"", blank:true},
+	{id:413, pId:4, name:"", blank:true},
+	{id:414, pId:4, name:"", blank:true},
+	{id:415, pId:4, name:"", blank:true},
+
+	{id:5, pId:0, name:"Multi-functional", open:false},
+	{id:501, pId:5, name:"Freeze the Root Node", iconSkin:"menu", file:"super/oneroot"},
+	{id:502, pId:5, name:"Click to Expand Node", iconSkin:"menu", file:"super/oneclick"},
+	{id:503, pId:5, name:"Keep Single Path", iconSkin:"menu", file:"super/singlepath"},
+	{id:516, pId:5, name:"Fuzzy Search", iconSkin:"menu", file:"super/fuzzySearch"},
+	{id:504, pId:5, name:"Adding Custom DOM", iconSkin:"menu", file:"super/diydom"},
+	{id:505, pId:5, name:"Checkbox / Radio Coexistence", iconSkin:"menu", file:"super/checkbox_radio"},
+	{id:506, pId:5, name:"Left Menu", iconSkin:"menu", file:"super/left_menu"},
+	{id:513, pId:5, name:"OutLook Style", iconSkin:"menu", file:"super/left_menuForOutLook"},
+	{id:514, pId:5, name:"Metro Style", iconSkin:"menu", file:"super/metro"},
+	{id:515, pId:5, name:"Awesome Style", iconSkin:"menu", file:"super/awesome"},
+	{id:507, pId:5, name:"Drop-down Menu", iconSkin:"menu", file:"super/select_menu"},
+	{id:509, pId:5, name:"Drop-down Menu with checkbox", iconSkin:"menu", file:"super/select_menu_checkbox"},
+	{id:510, pId:5, name:"Drop-down Menu with radio", iconSkin:"menu", file:"super/select_menu_radio"},
+	{id:508, pId:5, name:"Right-click Menu", iconSkin:"menu", file:"super/rightClickMenu"},
+	{id:511, pId:5, name:"Drag With Other DOMs", iconSkin:"menu", file:"super/dragWithOther"},
+	{id:512, pId:5, name:"Expand All Nodes with Async", iconSkin:"menu", file:"super/asyncForAll"},
+	{id:516, pId:5, name:"", blank:true},
+
+	{id:6, pId:0, name:"Other Extension Package", open:false},
+	{id:601, pId:6, name:"hide ordinary node", iconSkin:"menu", file:"exhide/common"},
+	{id:602, pId:6, name:"hide with checkbox mode", iconSkin:"menu", file:"exhide/checkbox"},
+	{id:603, pId:6, name:"hide with radio mode", iconSkin:"menu", file:"exhide/radio"},
+	{id:604, pId:6, name:"", blank:true},
+	{id:605, pId:6, name:"", blank:true},
+	{id:606, pId:6, name:"", blank:true},
+	{id:607, pId:6, name:"", blank:true},
+	{id:608, pId:6, name:"", blank:true},
+	{id:609, pId:6, name:"", blank:true},
+	{id:610, pId:6, name:"", blank:true},
+	{id:611, pId:6, name:"", blank:true},
+	{id:612, pId:6, name:"", blank:true},
+	{id:613, pId:6, name:"", blank:true},
+	{id:614, pId:6, name:"", blank:true},
+	{id:615, pId:6, name:"", blank:true}
+];
+</script>
+<div id="footer_wrap" class="footer_wrap">
+	<div id="footer" class="footer">
+		<a href="main.php" style="display:inline;" title="zTree Home"><div class="footer-logo"></div></a>
+
+		<!-- Site Switcher -->
+		<div id="footer_mii" class="footer_mii">
+			<a href="javascript:void(0)" target="_blank">Copyright @2010 zTree  All Rights Reserved.</a>
+		</div>
+		<div id="footer_siteMap" class="footer_siteMap open">
+			<div class="footer_siteMap_header" title="Site Map">Site Map</div>
+			<ul id="footer_siteMap_ul" class="up" style="display: none;">
+				<li><a href="main.php#_zTreeInfo" class="zTreeInfoBtn">Introduction of zTree</a></li>
+				<li><a href="main.php#_license" class="licenseBtn">License of zTree</a></li>
+				<li><a href="donate.php" class="donateBtn">Donate to zTree</a></li>
+				<li><a href="demo.php">zTree v3.5 Demo</a></li>
+				<li><a href="api.php">zTree v3.5 API Doc</a></li>
+				<li><a href="faq.php">zTree v3.x FAQ</a></li>
+				<li><a href="/hunter/index.html" target="_blank">zTree v2.6</a></li>
+				<li><a href="main.php#_links" class="linksBtn">Links</a></li>
+			</ul>
+		</div>
+		<div id="footer_contact" class="footer_contact open">
+			<div class="footer_contact_header" title="Contact Us">Contact Us</div>
+			<ul id="footer_contact_ul" class="up" style="display: none; ">
+				<li><a href="https://gitee.com/zTree/zTree_v3" target="_blank">zTree @ Gitee</a></li>
+				<li><a href="https://github.com/zTree/zTree_v3" target="_blank">zTree @ Github</a></li>
+				<li><a href="http://my.oschina.net/dyhunter" target="_blank">zTree @ Oschina </a></li>
+				<li><a href="http://ztreeapi.iteye.com/" target="_blank">zTree @ ITeye</a></li>
+				<li><a href="http://tieba.baidu.com/f?kw=zTree" target="_blank">zTree @ Baidu Hi</a></li>
+				<li><a href="mailto:hunter.z@263.net">Email</a></li>
+				
+			</ul>
+		</div>
+		<div id="footer_download" class="footer_download open">
+			<div class="footer_download_header" title="Download">Download</div>
+			<ul id="footer_download_ul" class="up" style="display: none; ">
+				<li><a href="https://github.com/zTree/zTree_v3" target="_blank">from Github</a></li>
+				<li><a href="https://gitee.com/zTree/zTree_v3" target="_blank">from Gitee</a></li>
+				<li><a href="https://code.google.com/p/jquerytree/" target="_blank">from Google</a></li>
+			</ul>
+		</div>
+		<!-- [END] Site Switcher -->
+
+	</div>
+</div>
+<script type="text/javascript" src="js/jquery-1.6.2.min.js?2018041601"></script>
+<script type="text/javascript" src="js/babygo.js?2018041601"></script>
+<script type='text/javascript' src='js/jquery.ztree.core.js?2018041601'></script><script type='text/javascript' src='js/demo.js?2018041601'></script>	</body>
+</html>
