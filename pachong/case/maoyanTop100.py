@@ -46,7 +46,21 @@ def parse_one_page(page):
 
 # 4.数据存储
 def write_to_mysql(content):
-    conn = pymysql.connect(host='localhost')
+    # 建立mysql链接
+    conn = pymysql.connect(host='localhost', user='root', passwd='123456', db='pachong', charset='utf8')
+    cursor = conn.cursor()
+    index = content['index']
+    image = content['image']
+    title = content['title']
+    actor = content['actor']
+    time = content['time']
+    score = content['score']
+    sql = 'insert into maoyan values (%s,%s,%s,%s,%s,%s)'
+    parm = (index, image, title, actor, time, score)
+    cursor.execute(sql, parm)
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 # 5.函数回调
 def main(offset):
@@ -56,6 +70,7 @@ def main(offset):
     items = parse_one_page(html)
     for item in items:
         print(item)
+        write_to_mysql(item)
 
 if __name__ == '__main__':
     for i in range(0, 10):
