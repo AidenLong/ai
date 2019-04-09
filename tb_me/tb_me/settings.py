@@ -131,7 +131,7 @@ IMAGES_STORE = './images'
 
 # csv数据导出
 FEED_EXPORTErs = {
-    'csv': 'tb._csv_item_exporter.TbCsvItemExpoter'
+    'csv': 'tb_me.csv_item_exporter.TbCsvItemExpoter'
 }
 FIELDS_TO_EXPORT = [
     'title',
