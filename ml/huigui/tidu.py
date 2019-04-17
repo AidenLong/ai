@@ -48,9 +48,9 @@ X2, Y2 = np.meshgrid(X2, Y2)
 Z2 = X2 ** 2 + Y2 ** 2
 
 ax.plot_surface(X2, Y2, Z2, rstride=1, cstride=1, cmap='rainbow')
-ax.plot(X, Y, Z, 'r--o')
+ax.plot(X, Y, Z, 'r--o', zorder=2)
 
 ax.set_title('梯度下降法求解，最终解为：x=%.2f,y=%2f,z=%.2f')
 
 plt.show()
-plt.savefig('fig.png', bbox_inches='tight')
+# plt.savefig('fig.png', bbox_inches='tight')
