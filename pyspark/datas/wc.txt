@@ -1,0 +1,6 @@
+ml svm knn dt lr ridge lasso
+svm knn knn dt lr lasso lasso l1 l2
+l2 svm logistic softmax knn knn dt lr
+logistic sigmoid relu dropout l2 l1 svm
+cnn rnn lstm lstm cnn bp rnn bptt svm
+svm knn ml dl
