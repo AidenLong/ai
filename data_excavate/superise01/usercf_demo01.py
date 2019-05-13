@@ -34,7 +34,7 @@ data = Dataset.load_builtin('ml-100k')
 trainset = data.build_full_trainset()
 
 # b. 构建模型
-sim_options = {'name': 'jac', 'user_based': True}
+sim_options = {'name': 'jaccard', 'user_based': True}
 # algo = KNNBasic(sim_options=sim_options)
 # algo = KNNWithMeans(sim_options=sim_options)
 algo = KNNBaseline(sim_options=sim_options)
