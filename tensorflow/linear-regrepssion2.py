@@ -8,8 +8,6 @@ import tensorflow as tf
 
 np.random.seed(28)
 
-# TODO： 将这个代码整理成为单机运行的
-
 # 1. 配置服务器相关信息
 # 因为tensorflow底层代码中，默认就是使用ps和work分别表示两类不同的工作节点
 # ps：变量/张量的初始化、存储相关节点
