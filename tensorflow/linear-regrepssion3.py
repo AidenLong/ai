@@ -35,12 +35,11 @@ init_op = tf.initialize_all_variables()
 with tf.Session() as mon_sess:
     mon_sess.run(init_op)
     step = 0
-    N = 10000
+    N = 20
     x = np.linspace(0, 6, N) + np.random.normal(loc=0.0, scale=2, size=N)
-    y = 14 * x - 7 + np.random.normal(loc=0.0, scale=1.0, size=N)
     while step < 10000:
         train_x = np.random.choice(x, 10)
-        train_y = np.random.choice(y, 10)
+        train_y = 14 * train_x - 7 + np.random.normal(loc=0.0, scale=1.0, size=10)
         _, step, loss_v, w_v, b_v = mon_sess.run([train, global_step, loss, w, b],
                                                  feed_dict={x_data: train_x, y_data: train_y})
 
