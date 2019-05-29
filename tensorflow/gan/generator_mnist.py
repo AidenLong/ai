@@ -123,7 +123,7 @@ def train():
     g_loss = -tf.log(y_generated)
 
     # 6. 定义优化函数
-    optimizer = tf.train.AdamOptimizer(0.0001)
+    optimizer = tf.train.AdamOptimizer(0.001)
     # var_list: 表示给定更新那些参数
     d_trainer = optimizer.minimize(d_loss, var_list=d_params)
     g_trainer = optimizer.minimize(g_loss, var_list=g_params)
@@ -162,8 +162,7 @@ def train():
             z_value = np.random.normal(0, 1, size=[batch_size, z_size]).astype(np.float32)
 
             # 执行判断操作
-            if i % 5 == 0:
-                sess.run(d_trainer, feed_dict={x_data: x_data_value, z_prior: z_value, keep_prob: 0.7})
+            sess.run(d_trainer, feed_dict={x_data: x_data_value, z_prior: z_value, keep_prob: 0.7})
             # 执行生成的训练
             sess.run(g_trainer, feed_dict={x_data: x_data_value, z_prior: z_value, keep_prob: 0.7})
 
@@ -177,6 +176,20 @@ def train():
 
     # 关闭会话
     sess.close()
+
+
+def test():
+    z_prior = tf.placeholder(tf.float32, [batch_size, z_size], name='z_prior')
+    x_generated, _ = build_generator(z_prior)
+    chkpt_fname = tf.train.latest_checkpoint(chechpoint_dir)
+    sess = tf.Session()
+    saver = tf.train.Saver()
+    if chkpt_fname:
+        print("load model......")
+        saver.restore(sess, chkpt_fname)
+    z_sample = np.random.normal(0, 1, size=(batch_size, z_size)).astype(np.float32)
+    x_gen_val = sess.run(x_generated, feed_dict={z_prior: z_sample})
+    show_result(x_gen_val, "output_sample/test.jpg")
 
 
 if __name__ == '__main__':
