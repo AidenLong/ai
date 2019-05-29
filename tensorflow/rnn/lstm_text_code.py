@@ -70,9 +70,16 @@ def rnn(x):
     x = tf.split(x, n_inputs, 1)
 
     # 构建细胞
+    # rnn_cell = tf.nn.rnn_cell.MultiRNNCell(
+    #     cells=[tf.nn.rnn_cell.LSTMCell(num_units=n_hidden1), tf.nn.rnn_cell.GRUCell(num_units=n_hidden2),
+    #            tf.nn.rnn_cell.BasicRNNCell(num_units=n_hidden3)])
+
+    # 构建1层GRU结构细胞
+    # run_cell = tf.nn.rnn_cell.GRUCell(num_units=n_hidden3)
+    # 构建3层GRU结构细胞
     rnn_cell = tf.nn.rnn_cell.MultiRNNCell(
-        cells=[tf.nn.rnn_cell.LSTMCell(num_units=n_hidden1), tf.nn.rnn_cell.GRUCell(num_units=n_hidden2),
-               tf.nn.rnn_cell.BasicRNNCell(num_units=n_hidden3)])
+        cells=[tf.nn.rnn_cell.GRUCell(num_units=n_hidden1), tf.nn.rnn_cell.GRUCell(num_units=n_hidden2),
+               tf.nn.rnn_cell.GRUCell(num_units=n_hidden3)])
 
     # 构建获取预测值（RNN网络输出的预测值）
     outputs, states = tf.nn.static_rnn(rnn_cell, x, dtype=tf.float32)
