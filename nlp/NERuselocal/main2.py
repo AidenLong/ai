@@ -219,9 +219,9 @@ def evaluate_line():
 
 def main(_):
 
-    if 1:
-        #if FLAGS.clean:
-            #clean(FLAGS)
+    if 0:
+        if FLAGS.clean:
+            clean(FLAGS)
         train()
     else:
         evaluate_line()

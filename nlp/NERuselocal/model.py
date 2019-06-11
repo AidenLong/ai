@@ -156,7 +156,7 @@ class Model(object):
             lstm_cell = {}
             for direction in ["forward", "backward"]:
                 with tf.variable_scope(direction):
-                    lstm_cell[direction] = rnn.CoupledInputForgetGateLSTMCell(
+                    lstm_cell[direction] = tf.nn.rnn_cell.CoupledInputForgetGateLSTMCell(
                         lstm_dim,
                         use_peepholes=True,
                         initializer=self.initializer,
