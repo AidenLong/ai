@@ -155,6 +155,7 @@ def train():
                         i for i in range(len(buckets_scale))
                         if buckets_scale[i] > random_number
                     ])
+                    # 拿出64对问答对
                     data, data_in = model.get_batch_data(
                         bucket_dbs,
                         bucket_id
@@ -191,10 +192,10 @@ def train():
                         break
                 print('\n')
 
-        if not os.path.exists(FLAGS.model_dir):
-            os.makedirs(FLAGS.model_dir)
-        if epoch_index % 800 == 0:
-            model.saver.save(sess, os.path.join(FLAGS.model_dir, FLAGS.model_name))
+                if epoch_index % 20 == 0:
+                    if not os.path.exists(FLAGS.model_dir):
+                        os.makedirs(FLAGS.model_dir)
+                    model.saver.save(sess, os.path.join(FLAGS.model_dir, FLAGS.model_name))
 
 
 def test_bleu(count):
@@ -280,7 +281,7 @@ def test():
         model = create_model(sess, True)
         model.batch_size = 1
         # 初始化变量
-
+        import os
         sess.run(tf.global_variables_initializer())
         model.saver.restore(sess, os.path.join(FLAGS.model_dir, FLAGS.model_name))
         sys.stdout.write("> ")
@@ -320,6 +321,7 @@ def test():
 
 
 def main(_):
+    import os
     if FLAGS.bleu > -1:
         test_bleu(FLAGS.bleu)
     elif FLAGS.test:

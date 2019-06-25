@@ -157,6 +157,7 @@ def generate_bucket_dbs(
     ):
     pool = {}
     word_count = Counter()
+    # 根据key获取不同数据库的数据库连接
     def _get_conn(key):
         if key not in pool:
             if not os.path.exists(output_dir):

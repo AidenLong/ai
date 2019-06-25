@@ -115,14 +115,14 @@ class S2SModel(object):
         self.decoder_inputs = []
         self.decoder_weights = []
         #encoder_inputs 这个列表对象中的每一个元素表示一个占位符，其名字分别为encoder0, encoder1,…,encoder39，encoder{i}的几何意义是编码器在时刻i的输入。
-        # buckets中的最后一个是最大的（即第“-1”个）
+        # buckets中的最后一个是最大的（即第“-1”个）20
         for i in range(buckets[-1][0]):
             self.encoder_inputs.append(tf.placeholder(
                 tf.int32,
                 shape=[None],
                 name='encoder_input_{}'.format(i)
             ))
-        # 输出比输入大 1，这是为了保证下面的targets可以向左shift 1位
+        # 输出比输入大 1，这是为了保证下面的targets可以向左shift 1位 30
         for i in range(buckets[-1][1] + 1):
             self.decoder_inputs.append(tf.placeholder(
                 tf.int32,
@@ -342,4 +342,5 @@ class S2SModel(object):
                 if i == decoder_size - 1 or target == data_utils.PAD_ID:
                     batch_weight[j] = 0.0
             batch_weights.append(batch_weight)
+            # 10*60 20*60 20*60
         return batch_encoder_inputs, batch_decoder_inputs, batch_weights
