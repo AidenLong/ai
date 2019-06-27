@@ -126,6 +126,7 @@ def train():
                     [[w[0] for w in s] for s in test_sentences])
                 )
             )
+            print(''.join(dico_chars.keys()))
         else:
             _c, char_to_id, id_to_char = char_mapping(train_sentences, FLAGS.lower)
 
@@ -219,7 +220,7 @@ def evaluate_line():
 
 def main(_):
 
-    if 0:
+    if 1:
         if FLAGS.clean:
             clean(FLAGS)
         train()
