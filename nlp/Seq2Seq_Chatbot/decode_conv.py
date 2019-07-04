@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#encoding=utf8
+# encoding=utf8
 import os
 import re
 import sys
@@ -7,6 +7,7 @@ import sqlite3
 from collections import Counter
 
 from tqdm import tqdm
+
 
 def file_lines(file_path):
     with open(file_path, 'rb') as fp:
@@ -29,14 +30,16 @@ def file_lines(file_path):
         except:
             print(line)
             return lines
-        
+
         lines.append('')
     return lines
+
 
 def contain_chinese(s):
     if re.findall('[\u4e00-\u9fa5]+', s):
         return True
     return False
+
 
 def valid(a, max_len=0):
     if len(a) > 0 and contain_chinese(a):
@@ -46,17 +49,20 @@ def valid(a, max_len=0):
             return True
     return False
 
+
 def insert(a, b, cur):
     cur.execute("""
     INSERT INTO conversation (ask, answer) VALUES
     ('{}', '{}')
     """.format(a.replace("'", "''"), b.replace("'", "''")))
 
+
 def insert_if(question, answer, cur, input_len=500, output_len=500):
     if valid(question, input_len) and valid(answer, output_len):
         insert(question, answer, cur)
         return 1
     return 0
+
 
 def main(file_path):
     lines = file_lines(file_path)
@@ -90,6 +96,7 @@ def main(file_path):
         if inserted != 0 and inserted % 50000 == 0:
             conn.commit()
     conn.commit()
+
 
 if __name__ == '__main__':
     file_path = 'dgk_shooter_min.conv'
