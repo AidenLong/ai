@@ -7,7 +7,7 @@ import time
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
-from sklearn.naive_bayes import BernoulliNB
+from sklearn.naive_bayes import BernoulliNB, MultinomialNB
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, precision_score, recall_score
 
@@ -49,7 +49,8 @@ data['content_length_sema'] = list(x_train['content_length_sema'])
 # 以上完成了数据清洁工作-------->tf-idf文本转换和svd降维
 
 print('=' * 30 + '构建伯努利贝叶斯模型' + '=' * 30)
-nb = BernoulliNB(alpha=1.0, binarize=0.0005)  # 二值转换阈值
+# nb = BernoulliNB(alpha=1.0, binarize=0.0005)  # 二值转换阈值
+nb = MultinomialNB(alpha=1.0, class_prior=2)  # 多项式贝叶斯转换阈值
 model = nb.fit(data, y_train)
 
 print('=' * 30 + '构建测试集' + '=' * 30)
