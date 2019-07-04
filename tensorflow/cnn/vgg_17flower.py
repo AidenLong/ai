@@ -1,32 +1,28 @@
 # -- encoding:utf-8 --
-"""
-17中花数据分类，是VGG网络初赛时候的数据集，现在网上没有下载；现在唯一一份数据集在tflearn这个框架中默认自带
-tflearn这个框架起始是在tensorflow基础上的一个封装，API比较简单(如果代码功底比较好，建议用tensorflow)
-tflearn安装：pip install tflearn
-"""
-
 from tflearn.datasets import oxflower17
 import tensorflow as tf
 
 # 读取数据
 X, Y = oxflower17.load_data(dirname="17flowers", one_hot=True)
-print(X.shape)  # (1360, 224, 224, 3) sample_number,224,224,3
-print(Y.shape)  # (1360, 17) sample_number,17
+print(X.shape)  # 224,224,3
+print(Y.shape)  # ,17
 
 # 相关的参数、超参数的设置
-# 学习率，一般学习率设置的比较小
-learn_rate = 0.1
-# 每次迭代的训练样本数量
-batch_size = 32
-# 训练迭代次数(每个迭代次数中必须训练完一次所有的数据集)
-train_epoch = 10000
-# 样本数量
+train_epoch = 1000
+batch_size = 16
+lr = tf.placeholder(tf.float32)
+display_epoch = 100
+n_class = Y.shape[1]
 total_sample_number = X.shape[0]
-
-# 模型构建
-# 1. 设置数据输入的占位符
 x = tf.placeholder(tf.float32, shape=[None, 224, 224, 3], name='x')
 y = tf.placeholder(tf.float32, shape=[None, 17], name='y')
+
+
+def get_learning_rate(epoch, step):
+    if epoch * total_batch + step < 500:
+        return 0.01
+    else:
+        return 0.001
 
 
 def get_variabel(name, shape=None, dtype=tf.float32, initialize=tf.random_normal_initializer(mean=0, stddev=0.1)):
@@ -53,7 +49,7 @@ def vgg_network(x, y):
     net9_kernal_size_2 = 256
     net11_unit_size = 1000
     net12_unit_size = 1000
-    net13_unit_size = 17
+    # net13_unit_size = 17
 
     # cov3-64 lrn
     with tf.variable_scope('net1'):
@@ -133,8 +129,8 @@ def vgg_network(x, y):
     # fc
     with tf.variable_scope('net13'):
         # 全连接
-        net = tf.add(tf.matmul(net, get_variabel('w', [net12_unit_size, net13_unit_size])),
-                     get_variabel('b', [net13_unit_size]))
+        net = tf.add(tf.matmul(net, get_variabel('w', [net12_unit_size, n_class])),
+                     get_variabel('b', [n_class]))
     # softmax
     with tf.variable_scope('net14'):
         # softmax
@@ -153,7 +149,7 @@ cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=act, labels
 # 我们可以通过创建标签错误率的摘要标量来跟踪丢失和错误率
 # 一个寻找全局最优点的优化算法，引入了二次方梯度校正。
 # 相比于基础SGD算法，1.不容易陷于局部优点。2.速度更快
-train = tf.train.AdamOptimizer(learning_rate=learn_rate).minimize(cost)
+train = tf.train.AdamOptimizer(learning_rate=lr).minimize(cost)
 
 # 正确率
 correct_pred = tf.equal(tf.argmax(y, axis=1), tf.argmax(act, axis=1))
@@ -176,22 +172,25 @@ with tf.Session as sess:
             train_x = X[step * batch_size: step: batch_size + batch_size]
             train_y = Y[step * batch_size: step: batch_size + batch_size]
             # 模型训练
-            sess.run(train, feed_dict={x: train_x, y: train_y})
+            sess.run(train, feed_dict={x: train_x, y: train_y, lr: get_learning_rate(epoch, step)})
 
             # 每更新10次，输出一下
             if step % 10 == 0:
-                loss, accuracy = sess.run([cost, acc], feed_dict={x: train_x, y: train_y})
+                loss, accuracy = sess.run([cost, acc],
+                                          feed_dict={x: train_x, y: train_y, lr: get_learning_rate(epoch, step)})
                 print('迭代次数:{}, 步骤：{}, 训练集损失函数：{}, 训练集准确率：{}'.format(epoch, step, loss, accuracy))
 
         if epoch % 2 == 0:
             # 获取测试集数据
             test_x = X[step * batch_size]
             test_y = Y[step * batch_size]
-            test_loss, test_accuracy = sess.run([cost, acc], feed_dict={x: test_x, y: test_y})
+            test_loss, test_accuracy = sess.run([cost, acc],
+                                                feed_dict={x: test_x, y: test_y, lr: get_learning_rate(epoch, step)})
             print('*' * 100)
             print('步骤:', epoch)
             print('测试集损失函数值：{}，测试集准确率：{}'.format(test_loss, test_accuracy))
-            train_loss, train_accuracy = sess.run([cost, acc], feed_dict={x: train_x, y: train_y})
+            train_loss, train_accuracy = sess.run([cost, acc], feed_dict={x: train_x, y: train_y,
+                                                                          lr: get_learning_rate(epoch, step)})
             print('训练集损失函数：{}, 训练集准确率：{}'.format(train_loss, train_accuracy))
             if test_accuracy > 0.8 and train_accuracy > 0.9:
                 saver.save(sess, './vgg/model', global_step=step)
