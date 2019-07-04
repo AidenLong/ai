@@ -7,6 +7,10 @@ import time
 
 import numpy as np
 import tensorflow as tf
+from flask import jsonify
+from flask import json
+from flask import Flask
+from flask import request
 
 import data_utils
 import s2s_model
@@ -320,8 +324,66 @@ def test():
             sentence = sys.stdin.readline()
 
 
+import os
+
+tf_config = tf.ConfigProto()
+sess = tf.Session(config=tf_config)
+sess.run(tf.global_variables_initializer())
+model = create_model(sess, True)
+model.batch_size = 1
+model.saver.restore(sess, os.path.join(FLAGS.model_dir, FLAGS.model_name))
+
+
+class TestBucket(object):
+    def __init__(self, sentence):
+        self.sentence = sentence
+
+    def random(self):
+        return self.sentence, ''
+
+
+def quest(sentence):
+    # 获取最小的分桶id
+    bucket_id = min([
+        b for b in range(len(buckets))
+        if buckets[b][0] > len(sentence)
+    ])
+    # 输入句子处理
+    data, _ = model.get_batch_data(
+        {bucket_id: TestBucket(sentence)},
+        bucket_id
+    )
+    # 获取编码、解码（）、以及解码数组的权重
+    encoder_inputs, decoder_inputs, decoder_weights = model.get_batch(
+        {bucket_id: TestBucket(sentence)},
+        bucket_id,
+        data
+    )
+    _, _, output_logits = model.step(
+        sess,
+        encoder_inputs,
+        decoder_inputs,
+        decoder_weights,
+        bucket_id,
+        True
+    )
+    outputs = [int(np.argmax(logit, axis=1)) for logit in output_logits]
+    ret = data_utils.indice_sentence(outputs)
+    return ret
+
+
+app = Flask(__name__)
+
+
+@app.route('/', methods=['POST', 'GET'])
+def get_text_input():
+    text = request.args.get('quest')
+    if text:
+        aa = quest(text)
+        return jsonify(aa)
+
+
 def main(_):
-    import os
     if FLAGS.bleu > -1:
         test_bleu(FLAGS.bleu)
     elif FLAGS.test:
@@ -332,5 +394,10 @@ def main(_):
 
 if __name__ == '__main__':
     np.random.seed(0)
-    tf.set_random_seed(0)
-    tf.app.run()
+    # 执行main方法
+    # tf.set_random_seed(0)
+    # tf.app.run()
+
+    # 启动web服务
+    app.config['JSON_AS_ASCII'] = False
+    app.run(host='127.0.0.1', port=5002)
