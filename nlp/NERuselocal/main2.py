@@ -14,43 +14,44 @@ from loader import augment_with_pretrained, prepare_dataset
 from utils import get_logger, make_path, clean, create_model, save_model
 from utils import print_config, save_config, load_config, test_ner
 from data_utils import load_word2vec, create_input, input_from_line, BatchManager
-root_path=os.getcwd()+os.sep
+
+root_path = os.getcwd() + os.sep
 flags = tf.app.flags
-flags.DEFINE_boolean("clean",       True,      "clean train folder")
-flags.DEFINE_boolean("train",       False,      "Whether train the model")
+flags.DEFINE_boolean("clean", True, "clean train folder")
+flags.DEFINE_boolean("train", False, "Whether train the model")
 # configurations for the model
-flags.DEFINE_integer("seg_dim",     20,         "Embedding size for segmentation, 0 if not used")
-flags.DEFINE_integer("char_dim",    100,        "Embedding size for characters")
-flags.DEFINE_integer("lstm_dim",    100,        "Num of hidden units in LSTM, or num of filters in IDCNN")
-flags.DEFINE_string("tag_schema",   "iobes",    "tagging schema iobes or iob")
+flags.DEFINE_integer("seg_dim", 20, "Embedding size for segmentation, 0 if not used")
+flags.DEFINE_integer("char_dim", 100, "Embedding size for characters")
+flags.DEFINE_integer("lstm_dim", 100, "Num of hidden units in LSTM, or num of filters in IDCNN")
+flags.DEFINE_string("tag_schema", "iobes", "tagging schema iobes or iob")
 
 # configurations for training
-flags.DEFINE_float("clip",          5,          "Gradient clip")
-flags.DEFINE_float("dropout",       0.5,        "Dropout rate")
-flags.DEFINE_float("batch_size",    20,         "batch size")
-flags.DEFINE_float("lr",            0.001,      "Initial learning rate")
-flags.DEFINE_string("optimizer",    "adam",     "Optimizer for training")
-flags.DEFINE_boolean("pre_emb",     True,       "Wither use pre-trained embedding")
-flags.DEFINE_boolean("zeros",       True,      "Wither replace digits with zero")
-flags.DEFINE_boolean("lower",       False,       "Wither lower case")
+flags.DEFINE_float("clip", 5, "Gradient clip")
+flags.DEFINE_float("dropout", 0.5, "Dropout rate")
+flags.DEFINE_float("batch_size", 20, "batch size")
+flags.DEFINE_float("lr", 0.001, "Initial learning rate")
+flags.DEFINE_string("optimizer", "adam", "Optimizer for training")
+flags.DEFINE_boolean("pre_emb", True, "Wither use pre-trained embedding")
+flags.DEFINE_boolean("zeros", True, "Wither replace digits with zero")
+flags.DEFINE_boolean("lower", False, "Wither lower case")
 
-flags.DEFINE_integer("max_epoch",   100,        "maximum training epochs")
-flags.DEFINE_integer("steps_check", 100,        "steps per checkpoint")
-flags.DEFINE_string("ckpt_path",    "ckpt",      "Path to save model")
-flags.DEFINE_string("summary_path", "summary",      "Path to store summaries")
-flags.DEFINE_string("log_file",     "train.log",    "File for log")
-flags.DEFINE_string("map_file",     "maps.pkl",     "file for maps")
-flags.DEFINE_string("vocab_file",   "vocab.json",   "File for vocab")
-flags.DEFINE_string("config_file",  "config_file",  "File for config")
-flags.DEFINE_string("script",       "conlleval",    "evaluation script")
-flags.DEFINE_string("result_path",  "result",       "Path for results")
-flags.DEFINE_string("emb_file",     os.path.join(root_path+"data", "vec.txt"),  "Path for pre_trained embedding")
-flags.DEFINE_string("train_file",   os.path.join(root_path+"data", "example.train"),  "Path for train data")
-flags.DEFINE_string("dev_file",     os.path.join(root_path+"data", "example.dev"),    "Path for dev data")
-flags.DEFINE_string("test_file",    os.path.join(root_path+"data", "example.test"),   "Path for test data")
+flags.DEFINE_integer("max_epoch", 100, "maximum training epochs")
+flags.DEFINE_integer("steps_check", 100, "steps per checkpoint")
+flags.DEFINE_string("ckpt_path", "ckpt", "Path to save model")
+flags.DEFINE_string("summary_path", "summary", "Path to store summaries")
+flags.DEFINE_string("log_file", "train.log", "File for log")
+flags.DEFINE_string("map_file", "maps.pkl", "file for maps")
+flags.DEFINE_string("vocab_file", "vocab.json", "File for vocab")
+flags.DEFINE_string("config_file", "config_file", "File for config")
+flags.DEFINE_string("script", "conlleval", "evaluation script")
+flags.DEFINE_string("result_path", "result", "Path for results")
+flags.DEFINE_string("emb_file", os.path.join(root_path + "data", "vec.txt"), "Path for pre_trained embedding")
+flags.DEFINE_string("train_file", os.path.join(root_path + "data", "example.train"), "Path for train data")
+flags.DEFINE_string("dev_file", os.path.join(root_path + "data", "example.dev"), "Path for dev data")
+flags.DEFINE_string("test_file", os.path.join(root_path + "data", "example_test.test"), "Path for test data")
 
 flags.DEFINE_string("model_type", "idcnn", "Model type, can be idcnn or bilstm")
-#flags.DEFINE_string("model_type", "bilstm", "Model type, can be idcnn or bilstm")
+# flags.DEFINE_string("model_type", "bilstm", "Model type, can be idcnn or bilstm")
 
 FLAGS = tf.app.flags.FLAGS
 assert FLAGS.clip < 5.1, "gradient clip should't be too much"
@@ -84,6 +85,7 @@ def config_model(char_to_id, tag_to_id):
 
 def evaluate(sess, model, name, data, id_to_tag, logger):
     logger.info("evaluate:{}".format(name))
+    #  执行预测，获取每个词的预测值和label
     ner_results = model.evaluate(sess, data, id_to_tag)
     eval_lines = test_ner(ner_results, FLAGS.result_path)
     for line in eval_lines:
@@ -132,8 +134,8 @@ def train():
 
         # Create a dictionary and a mapping for tags
         _t, tag_to_id, id_to_tag = tag_mapping(train_sentences)
-        #with open('maps.txt','w',encoding='utf8') as f1:
-            #f1.writelines(str(char_to_id)+" "+id_to_char+" "+str(tag_to_id)+" "+id_to_tag+'\n')
+        # with open('maps.txt','w',encoding='utf8') as f1:
+        # f1.writelines(str(char_to_id)+" "+id_to_char+" "+str(tag_to_id)+" "+id_to_tag+'\n')
         with open(FLAGS.map_file, "wb") as f:
             pickle.dump([char_to_id, id_to_char, tag_to_id, id_to_tag], f)
     else:
@@ -186,13 +188,13 @@ def train():
                         iteration = step // steps_per_epoch + 1
                         logger.info("iteration:{} step:{}/{}, "
                                     "NER loss:{:>9.6f}".format(
-                            iteration, step%steps_per_epoch, steps_per_epoch, np.mean(loss)))
+                            iteration, step % steps_per_epoch, steps_per_epoch, np.mean(loss)))
                         loss = []
-    
-               # best = evaluate(sess, model, "dev", dev_manager, id_to_tag, logger)
-                if i%7==0:
+
+                # best = evaluate(sess, model, "dev", dev_manager, id_to_tag, logger)
+                if i % 7 == 0:
                     save_model(sess, model, FLAGS.ckpt_path, logger)
-            #evaluate(sess, model, "test", test_manager, id_to_tag, logger)
+            # evaluate(sess, model, "test", test_manager, id_to_tag, logger)
 
 
 def evaluate_line():
@@ -205,22 +207,26 @@ def evaluate_line():
         char_to_id, id_to_char, tag_to_id, id_to_tag = pickle.load(f)
     with tf.Session(config=tf_config) as sess:
         model = create_model(sess, Model, FLAGS.ckpt_path, load_word2vec, config, id_to_char, logger)
-        while True:
+        # while True:
             # try:
             #     line = input("请输入测试句子:")
             #     result = model.evaluate_line(sess, input_from_line(line, char_to_id), id_to_tag)
             #     print(result)
             # except Exception as e:
             #     logger.info(e)
+        test_sentences = load_sentences(FLAGS.test_file, FLAGS.lower, FLAGS.zeros)
 
-                line = input("请输入测试句子:")
-                result = model.evaluate_line(sess, input_from_line(line, char_to_id), id_to_tag)
-                print(result)
+        # Use selected tagging scheme (IOB / IOBES)
+        update_tag_scheme(test_sentences, FLAGS.tag_schema)
+        test_data = prepare_dataset(
+            test_sentences, char_to_id, tag_to_id, FLAGS.lower
+        )
 
+        test_manager = BatchManager(test_data, 100)
+        evaluate(sess, model, "test", test_manager, id_to_tag, logger)
 
 def main(_):
-
-    if 1:
+    if 0:
         if FLAGS.clean:
             clean(FLAGS)
         train()
@@ -230,6 +236,3 @@ def main(_):
 
 if __name__ == "__main__":
     tf.app.run(main)
-
-
-
