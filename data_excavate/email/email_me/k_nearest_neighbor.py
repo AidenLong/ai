@@ -16,7 +16,7 @@ from sklearn.ensemble.tests.test_forest import check_min_samples_leaf
 
 df = pd.read_csv('../data/result_process02.csv', sep=',')
 # print(df.head(5))
-df.dropna(axis=0, how='any', inplace='True')
+df.dropna(axis=0, how='any', inplace=True)
 print(df.head(5))
 print(df.info())
 

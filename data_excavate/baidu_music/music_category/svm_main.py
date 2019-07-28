@@ -1,6 +1,6 @@
 # coding:utf-8
-from music_category import svm
-from music_category import feature
+from baidu_music.music_category import svm
+from baidu_music.music_category import feature
 
 svm.cross_validation(data_percentage=0.99)
 
