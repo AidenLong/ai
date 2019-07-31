@@ -66,7 +66,7 @@ plt.ylim(y_min, y_max)
 plt.legend(loc='upper right')
 plt.xlabel('x')
 plt.ylabel('y')
-plt.title('AdaBoost分类结果，正确率为：.2f%%' % (bdt.score(X, y) * 100))
+plt.title('AdaBoost分类结果，正确率为：.2f%' % (bdt.score(X, y) * 100))
 
 # 获取决策树函数的数值
 twoclass_output = bdt.decision_function(X)
