@@ -81,7 +81,8 @@ tf.app.flags.DEFINE_boolean(
     '是否使用16位浮点数（默认32位）'
 )
 tf.app.flags.DEFINE_integer(
-    'bleu',
+    'bleu',  # 评测聊天机器人效果 NLTK.bleu() (0,1)趋近于1，代表相似度越高,模型越好。
+             # NLTK是自然语言处理包。NLTK.bleu([y],[y^])输入两个序列，返回0-1。算的其实就是两个文本之间的欧式距离，可用于论文查重
     -1,
     '是否测试bleu'
 )
@@ -219,6 +220,7 @@ def test_bleu(count):
     # bleu设置0的话，默认对所有样本采样
     if count <= 0:
         count = total_size
+        count = 50
     buckets_scale = [
         sum(bucket_sizes[:i + 1]) / total_size
         for i in range(len(bucket_sizes))
@@ -229,6 +231,7 @@ def test_bleu(count):
         model.batch_size = 1
         # 初始化变量
         sess.run(tf.initialize_all_variables())
+        import os
         model.saver.restore(sess, os.path.join(FLAGS.model_dir, FLAGS.model_name))
 
         total_score = 0.0
@@ -260,6 +263,7 @@ def test_bleu(count):
             ask, _ = data[0]
             all_answers = bucket_dbs[bucket_id].all_answers(ask)
             ret = data_utils.indice_sentence(outputs)
+            ret = data_utils.handle_repeat_word(ret)
             if not ret:
                 continue
             references = [list(x) for x in all_answers]
@@ -268,8 +272,11 @@ def test_bleu(count):
                 list(ret),
                 weights=(1.0,)
             )
+            # print(references)
+            # print(list(ret))
+            # print(score)
             total_score += score
-        print('BLUE: {:.2f} in {} samples'.format(total_score / count * 10, count))
+        print('BLUE: {:.2f} in {} samples'.format(total_score / count, count))
 
 
 def test():
@@ -318,69 +325,71 @@ def test():
             )
             outputs = [int(np.argmax(logit, axis=1)) for logit in output_logits]
             ret = data_utils.indice_sentence(outputs)
+            ret = data_utils.handle_repeat_word(ret)
             print(ret)
             print("> ", end="")
             sys.stdout.flush()
             sentence = sys.stdin.readline()
 
 
-import os
-
-tf_config = tf.ConfigProto()
-sess = tf.Session(config=tf_config)
-sess.run(tf.global_variables_initializer())
-model = create_model(sess, True)
-model.batch_size = 1
-model.saver.restore(sess, os.path.join(FLAGS.model_dir, FLAGS.model_name))
-
-
-class TestBucket(object):
-    def __init__(self, sentence):
-        self.sentence = sentence
-
-    def random(self):
-        return self.sentence, ''
-
-
-def quest(sentence):
-    # 获取最小的分桶id
-    bucket_id = min([
-        b for b in range(len(buckets))
-        if buckets[b][0] > len(sentence)
-    ])
-    # 输入句子处理
-    data, _ = model.get_batch_data(
-        {bucket_id: TestBucket(sentence)},
-        bucket_id
-    )
-    # 获取编码、解码（）、以及解码数组的权重
-    encoder_inputs, decoder_inputs, decoder_weights = model.get_batch(
-        {bucket_id: TestBucket(sentence)},
-        bucket_id,
-        data
-    )
-    _, _, output_logits = model.step(
-        sess,
-        encoder_inputs,
-        decoder_inputs,
-        decoder_weights,
-        bucket_id,
-        True
-    )
-    outputs = [int(np.argmax(logit, axis=1)) for logit in output_logits]
-    ret = data_utils.indice_sentence(outputs)
-    return ret
-
-
-app = Flask(__name__)
-
-
-@app.route('/', methods=['POST', 'GET'])
-def get_text_input():
-    text = request.args.get('quest')
-    if text:
-        aa = quest(text)
-        return jsonify(aa)
+# import os
+#
+# tf_config = tf.ConfigProto()
+# sess = tf.Session(config=tf_config)
+# sess.run(tf.global_variables_initializer())
+# model = create_model(sess, True)
+# model.batch_size = 1
+# model.saver.restore(sess, os.path.join(FLAGS.model_dir, FLAGS.model_name))
+#
+#
+# class TestBucket(object):
+#     def __init__(self, sentence):
+#         self.sentence = sentence
+#
+#     def random(self):
+#         return self.sentence, ''
+#
+#
+# def quest(sentence):
+#     # 获取最小的分桶id
+#     bucket_id = min([
+#         b for b in range(len(buckets))
+#         if buckets[b][0] > len(sentence)
+#     ])
+#     # 输入句子处理
+#     data, _ = model.get_batch_data(
+#         {bucket_id: TestBucket(sentence)},
+#         bucket_id
+#     )
+#     # 获取编码、解码（）、以及解码数组的权重
+#     encoder_inputs, decoder_inputs, decoder_weights = model.get_batch(
+#         {bucket_id: TestBucket(sentence)},
+#         bucket_id,
+#         data
+#     )
+#     _, _, output_logits = model.step(
+#         sess,
+#         encoder_inputs,
+#         decoder_inputs,
+#         decoder_weights,
+#         bucket_id,
+#         True
+#     )
+#     outputs = [int(np.argmax(logit, axis=1)) for logit in output_logits]
+#     ret = data_utils.indice_sentence(outputs)
+#     ret = data_utils.handle_repeat_word(ret)
+#     return ret
+#
+#
+# app = Flask(__name__)
+#
+#
+# @app.route('/', methods=['POST', 'GET'])
+# def get_text_input():
+#     text = request.args.get('quest')
+#     if text:
+#         aa = quest(text)
+#         return jsonify(aa)
 
 
 def main(_):
@@ -395,9 +404,9 @@ def main(_):
 if __name__ == '__main__':
     np.random.seed(0)
     # 执行main方法
-    # tf.set_random_seed(0)
-    # tf.app.run()
+    tf.set_random_seed(0)
+    tf.app.run()
 
     # 启动web服务
-    app.config['JSON_AS_ASCII'] = False
-    app.run(host='127.0.0.1', port=5002)
+    # app.config['JSON_AS_ASCII'] = False
+    # app.run(host='127.0.0.1', port=5002)

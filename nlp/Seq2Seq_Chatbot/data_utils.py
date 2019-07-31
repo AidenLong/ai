@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#encoding=utf8
+# encoding=utf8
 
 
 import os
@@ -9,14 +9,17 @@ import math
 import shutil
 import pickle
 import sqlite3
+import re
 from collections import OrderedDict, Counter
 
 import numpy as np
 from tqdm import tqdm
 
+
 def with_path(p):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(current_dir, p)
+
 
 DICTIONARY_PATH = 'db/dictionary.json'
 EOS = '<eos>'
@@ -27,11 +30,12 @@ GO = '<go>'
 # 我一般是逗号放到句子后面的……
 # 不过这样比较方便屏蔽某一行，如果是JS就不用这样了，因为JS的JSON语法比较松，允许多余逗号
 buckets = [
-      (5, 15)
+    (5, 15)
     , (10, 20)
     , (15, 25)
     , (20, 30)
 ]
+
 
 def time(s):
     ret = ''
@@ -48,6 +52,7 @@ def time(s):
         ret += '{}s'.format(s)
     return ret
 
+
 def load_dictionary():
     with open(with_path(DICTIONARY_PATH), 'r', encoding='UTF-8') as fp:
         dictionary = [EOS, UNK, PAD, GO] + json.load(fp)
@@ -58,6 +63,7 @@ def load_dictionary():
             word_index[word] = index
         dim = len(dictionary)
     return dim, dictionary, index_word, word_index
+
 
 """
 def save_model(sess, name='model.ckpt'):
@@ -81,6 +87,7 @@ EOS_ID = word_index[EOS]
 UNK_ID = word_index[UNK]
 PAD_ID = word_index[PAD]
 GO_ID = word_index[GO]
+
 
 class BucketData(object):
 
@@ -120,6 +127,7 @@ class BucketData(object):
                 if ask is not None and answer is not None:
                     return ask, answer
 
+
 def read_bucket_dbs(buckets_dir):
     ret = []
     for encoder_size, decoder_size in buckets:
@@ -127,14 +135,16 @@ def read_bucket_dbs(buckets_dir):
         ret.append(bucket_data)
     return ret
 
+
 def sentence_indice(sentence):
     ret = []
-    for  word in sentence:
+    for word in sentence:
         if word in word_index:
             ret.append(word_index[word])
         else:
             ret.append(word_index[UNK])
     return ret
+
 
 def indice_sentence(indice):
     ret = []
@@ -144,19 +154,22 @@ def indice_sentence(indice):
             break
         if word != UNK and word != GO and word != PAD:
             ret.append(word)
-    return ''.join(ret)
+    return ret
+
 
 def vector_sentence(vector):
     return indice_sentence(vector.argmax(axis=1))
+
 
 def generate_bucket_dbs(
         input_dir,
         output_dir,
         buckets,
         tolerate_unk=1
-    ):
+):
     pool = {}
     word_count = Counter()
+
     # 根据key获取不同数据库的数据库连接
     def _get_conn(key):
         if key not in pool:
@@ -170,6 +183,7 @@ def generate_bucket_dbs(
             conn.commit()
             pool[key] = (conn, cur)
         return pool[key]
+
     all_inserted = {}
     for encoder_size, decoder_size in buckets:
         key = (encoder_size, decoder_size)
@@ -185,6 +199,7 @@ def generate_bucket_dbs(
         print('读取数据库: {}'.format(db_path))
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
+
         def is_valid(s):
             unk = 0
             for w in s:
@@ -193,11 +208,13 @@ def generate_bucket_dbs(
                     if unk > tolerate_unk:
                         return False
             return True
+
         # 读取最大的rowid，如果rowid是连续的，结果就是里面的数据条数
         # 比SELECT COUNT(1)要快
         total = c.execute('''SELECT MAX(ROWID) FROM conversation;''').fetchall()[0][0]
         ret = c.execute('''SELECT ask, answer FROM conversation;''')
         wait_insert = []
+
         def _insert(wait_insert):
             if len(wait_insert) > 0:
                 for encoder_size, decoder_size, ask, answer in wait_insert:
@@ -211,6 +228,7 @@ def generate_bucket_dbs(
                     conn.commit()
                 wait_insert = []
             return wait_insert
+
         for ask, answer in tqdm(ret, total=total):
             if is_valid(ask) and is_valid(answer):
                 for i in range(len(buckets)):
@@ -226,6 +244,7 @@ def generate_bucket_dbs(
     word_count_arr = sorted(word_count_arr, key=lambda x: x[1], reverse=True)
     wait_insert = _insert(wait_insert)
     return all_inserted, word_count_arr
+
 
 if __name__ == '__main__':
     print('generate bucket dbs')
@@ -272,3 +291,18 @@ if __name__ == '__main__':
         print(key)
         print(inserted_count)
     print('done')
+
+
+def handle_repeat_word(outputs):
+    outputs = ' '.join(outputs)
+    patten1 = u"(?i)\\b([\u4e00-\u9fa5_a-zA-Z0-9，' ']+)\\b(?:\\s+\\1\\b)+"
+    patten2 = u"(?i)\\b([a-z]+' ')\\b(?:\\s+\\1\\b)+"
+    p = re.compile(patten1)
+    match = p.findall(outputs)
+    if not match:
+        p = re.compile(patten2)
+        match = p.findall(outputs)
+    if match:
+        for str in match:
+            outputs = outputs.replace(str, '', outputs.count(str) - 1)
+    return outputs.replace(' ', '')
