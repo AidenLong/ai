@@ -37,10 +37,10 @@ def level_order(root):
 
 
 if __name__ == '__main__':
-    root = TreeNode(1)
-    root.left = TreeNode(2)
+    root_node = TreeNode(1)
+    root_node.left = TreeNode(2)
     right = TreeNode(3)
     right.left = TreeNode(4)
     right.right = TreeNode(5)
-    root.right = right
-    print(level_order(root))
+    root_node.right = right
+    print(level_order(root_node))
