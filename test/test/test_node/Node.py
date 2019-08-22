@@ -80,7 +80,7 @@ def postorderTraverse(root):
             curr = curr.right
         else:
             curr = stack.pop()
-    return sol
+    return sol[::-1]
 
 
 def levelOrder(root):
